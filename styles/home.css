@@ -3,3 +3,7 @@ section {
     padding: 10px;
     margin: 10px;
 }
+
+#results-div {
+    display: none;
+}
