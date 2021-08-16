@@ -9,8 +9,8 @@ const resetScoresButton = document.querySelector('#reset-scores-button');
 
 // initialize state
 let correctAnswers = 0;
-let quizPassCount = localStorage.getItem('quizPassCount');
-let quizFailCount = localStorage.getItem('quizFailCount');
+let quizPassCount = Number(localStorage.getItem('quizPassCount'));
+let quizFailCount = Number(localStorage.getItem('quizFailCount'));
 let firstName = '';
 let lastName = '';
 
@@ -75,8 +75,10 @@ const endQuizShowResults = () => {
     //Update the DOM
     resultsSpan.textContent = resultsString;
     resultsDiv.className = resultsDivClass;
-    resultsDiv.style.display = 'block';
-    pastResultsSpan.textContent = `Pass: ${quizPassCount} Fail: ${quizFailCount} Attempts: ${ (quizPassCount + quizFailCount) }`;
+    resultsDiv.style.display = 'flex';
+    let total = quizFailCount + quizPassCount;
+    let percent = Math.round(100 * (quizPassCount / total));
+    pastResultsSpan.textContent = `Your Past Score: Pass: ${quizPassCount}, Fail: ${quizFailCount}, Attempts: ${ total } (${ percent }%) `;
 };
 
 // set event listeners 
