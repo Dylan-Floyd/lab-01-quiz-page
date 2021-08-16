@@ -7,3 +7,15 @@ section {
 #results-div {
     display: none;
 }
+
+.good-results {
+    background-color: green;
+}
+
+.okay-results {
+    background-color: blue;
+}
+
+.bad-results {
+    background-color: red;
+}

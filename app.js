@@ -3,12 +3,22 @@ import { countsAsAYes } from './utils.js';
 
 const quizButton = document.getElementById('quiz-button');
 const resultsDiv = document.querySelector('#results-div');
-const scoreSpan = document.querySelector('#score-span');
+const resultsSpan = document.querySelector('#results-span');
+const pastResultsSpan = document.querySelector('#past-results-span');
+const resetScoresButton = document.querySelector('#reset-scores-button');
 
 // initialize state
 let correctAnswers = 0;
+let quizPassCount = localStorage.getItem('quizPassCount');
+let quizFailCount = localStorage.getItem('quizFailCount');
 let firstName = '';
 let lastName = '';
+
+//Updates quizPassCount and quizFailCount in LocalStorage
+const updateLocalStorage = ()=> {
+    localStorage.setItem('quizPassCount', quizPassCount);
+    localStorage.setItem('quizFailCount', quizFailCount);
+};
 
 //Stores first and last name as provided by user.
 const setupQuiz = () => {
@@ -35,9 +45,38 @@ const askQuestions = () => {
 //Also modifies DOM to display results.
 const endQuizShowResults = () => {
     alert('You completed the quiz! View your results below.');
-    scoreSpan.textContent = correctAnswers;
+    let resultsString = '';
+    let resultsDivClass = '';
+
+    //determine what text to display and what the results-div should look like
+    if (correctAnswers === 3) {
+        resultsString = `Congratulations, ${firstName} ${lastName}! You got all
+            3 out of 3 questions right!`;
+        resultsDivClass = 'good-results';
+    } else if (correctAnswers === 2 || correctAnswers === 1) {
+        resultsString = `Not bad, ${firstName} ${lastName}! You got
+            ${correctAnswers} out of 3 questions right!`;
+        resultsDivClass = 'okay-results';
+    } else if (correctAnswers === 0) {
+        resultsString = `Big oof, ${firstName} ${lastName}. You got
+        0 out of 3 questions right.`;
+        resultsDivClass = 'bad-results';
+    }
+
+    //Update state
+    if (correctAnswers > 0) {
+        quizPassCount++;
+    } else {
+        quizFailCount++;
+    }
+    updateLocalStorage();
     correctAnswers = 0;
+
+    //Update the DOM
+    resultsSpan.textContent = resultsString;
+    resultsDiv.className = resultsDivClass;
     resultsDiv.style.display = 'block';
+    pastResultsSpan.textContent = `Pass: ${quizPassCount} Fail: ${quizFailCount} Attempts: ${ (quizPassCount + quizFailCount) }`;
 };
 
 // set event listeners 
@@ -52,4 +91,10 @@ quizButton.addEventListener('click', () => {
     setupQuiz();
     askQuestions();
     endQuizShowResults();
+});
+
+resetScoresButton.addEventListener('click', () => {
+    quizPassCount = 0;
+    quizFailCount = 0;
+    updateLocalStorage();
 });
