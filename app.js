@@ -1,4 +1,5 @@
 // import functions and grab DOM elements
+import { countsAsAYes } from './utils.js';
 
 // initialize state
 
